@@ -33,6 +33,18 @@ spec:
         command: ["node", "/app/app.js"]
         ports:
         - containerPort: 3000
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 10
         volumeMounts:
         - name: app-dir
           mountPath: /app
@@ -54,7 +66,11 @@ data:
     const port = process.env.PORT || 3000;
 
     app.get('/', (req, res) => {
-      res.send('Hello from EKS!');
+      res.send('hello from eks bro');
+    });
+
+    app.get('/health', (req, res) => {
+      res.status(200).send('OK');
     });
 
     app.listen(port, () => {
