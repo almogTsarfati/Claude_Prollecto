@@ -42,6 +42,7 @@ module "eks" {
       desired_size = 2
 
       instance_types = ["t3.micro"]
+      ami_type       = "AL2_x86_64"
     }
   }
 
@@ -63,6 +64,7 @@ module "vpc" {
   public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 
   enable_nat_gateway = true
+  single_nat_gateway = true
   enable_vpn_gateway = false
 
   tags = {
