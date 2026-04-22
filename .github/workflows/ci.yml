@@ -1,0 +1,33 @@
+```yaml
+name: CI
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest 
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set version
+      id: version
+      run: echo "VERSION=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: true
+        tags: |
+          almogtsarfati/simple-app:${{ steps.version.outputs.VERSION }}
+          almogtsarfati/simple-app:latest
+
+    - name: Update Helm values
+      run: |
+        sed -i "s/tag: .*/tag: \"${{ steps.version.outputs.VERSION }}\"/" helm/simple-app/values.yaml
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git add helm/simple-app/values.yaml
+        git commit -m "chore: update image tag to ${{ steps.version.outputs.VERSION }}"
+        git push
+```           

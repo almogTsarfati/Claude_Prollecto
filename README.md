@@ -153,25 +153,31 @@ source terraform/aws-login-env.sh
        paths:
          - 'app/**'
          - 'Dockerfile'
+         # Don't trigger on values.yaml changes to avoid infinite loop
    
    jobs:
      build:
        runs-on: ubuntu-latest
+       permissions:
+         contents: write  # Allow pushing to repository
        steps:
-         - uses: actions/checkout@v3
+         - name: Checkout code
+           uses: actions/checkout@v4
+           with:
+             token: ${{ secrets.GITHUB_TOKEN }}
          
-         - name: Set version
+         - name: Set version tag
            id: version
            run: echo "VERSION=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
          
          - name: Login to Docker Hub
-           uses: docker/login-action@v2
+           uses: docker/login-action@v3
            with:
              username: ${{ secrets.DOCKER_USERNAME }}
              password: ${{ secrets.DOCKER_PASSWORD }}
          
-         - name: Build and push
-           uses: docker/build-push-action@v4
+         - name: Build and push Docker image
+           uses: docker/build-push-action@v5
            with:
              context: .
              push: true
@@ -179,15 +185,24 @@ source terraform/aws-login-env.sh
                ${{ secrets.DOCKER_USERNAME }}/simple-app:${{ steps.version.outputs.VERSION }}
                ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
          
-         - name: Update Helm values
+         - name: Update Helm values with new tag
            run: |
              sed -i "s/tag: .*/tag: \"${{ steps.version.outputs.VERSION }}\"/" helm/simple-app/values.yaml
-             git config user.name "GitHub Actions"
-             git config user.email "actions@github.com"
+         
+         - name: Commit and push changes
+           run: |
+             git config user.name "github-actions[bot]"
+             git config user.email "github-actions[bot]@users.noreply.github.com"
              git add helm/simple-app/values.yaml
-             git commit -m "chore: update image tag to ${{ steps.version.outputs.VERSION }}"
+             git diff-index --quiet HEAD || git commit -m "chore: update image tag to ${{ steps.version.outputs.VERSION }} [skip ci]"
              git push
    ```
+   
+   **Key Features:**
+   - **Automatic versioning**: Uses timestamp (e.g., `20260422-153000`)
+   - **Prevents infinite loop**: `[skip ci]` in commit message prevents re-triggering
+   - **Only triggers on app changes**: Won't run when values.yaml is updated
+   - **Dual tagging**: Creates both versioned tag and `latest`
 
 2. **Configure GitHub Secrets**:
    - Go to GitHub repo → Settings → Secrets

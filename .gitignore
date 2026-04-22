@@ -17,7 +17,7 @@ override.tf.json
 *.key
 .env
 .env.*
-./scripts/*
+aws-login-env.sh
 
 # Python
 __pycache__/
