@@ -4,7 +4,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-  res.send('hello from eks shimi noder');
+  res.send('hello from eks shimi noder 2');
 });
 
 app.listen(port, () => {
