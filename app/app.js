@@ -4,7 +4,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-  res.send('hello from eks shimi noder argoCD');
+  res.send('hello from eks shimi noder argoCD 2');
 });
 
 app.listen(port, () => {

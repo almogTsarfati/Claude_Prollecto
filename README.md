@@ -233,16 +233,11 @@ source terraform/aws-login-env.sh
 
 2. **Access ArgoCD UI**:
    ```bash
-   kubectl port-forward svc/argocd-server -n argocd 8080:443
-   # Get password:
-   kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+   argocd admin dashboard -n argocd
    ```
 
 3. **Create ArgoCD Application**:
-   - Point to your GitHub repo
-   - Path: `helm/simple-app`
-   - Destination: your EKS cluster
-   - Sync policy: Automatic (watches values.yaml)
+   - create manually using the UI and the simple-app-argo-app.yaml
 
 4. **Test end-to-end flow**:
    - Change code in `app/app.js`
