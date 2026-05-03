@@ -228,7 +228,7 @@ source terraform/aws-login-env.sh
 1. **Install ArgoCD**:
    ```bash
    kubectl create namespace argocd
-   kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+   kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/core-install.yaml --server-side --force-conflicts
    ```
 
 2. **Access ArgoCD UI**:
