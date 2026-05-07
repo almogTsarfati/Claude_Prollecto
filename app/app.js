@@ -135,6 +135,23 @@ app.get('/', (req, res) => {
             opacity: 0.8;
         }
 
+        .github-link {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .github-link:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
             h1 { font-size: 2em; }
             .container { padding: 20px; }
@@ -157,6 +174,9 @@ app.get('/', (req, res) => {
                 observability, and GitOps on AWS EKS. This project demonstrates modern
                 DevOps practices with continuous integration, containerization, and
                 infrastructure as code.
+            </p>
+            <p style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.2);">
+                🤖 Built with <strong>Claude AI</strong> (Anthropic) via <strong>AWS Bedrock</strong>
             </p>
         </div>
 
@@ -211,6 +231,9 @@ app.get('/', (req, res) => {
             <p style="margin-top: 10px; font-size: 0.9em;">
                 Infrastructure: AWS EKS | Monitoring: Prometheus + Loki | Logs: Grafana
             </p>
+            <a href="https://github.com/almogTsarfati/Claude_Prollecto" target="_blank" class="github-link">
+                📂 View on GitHub
+            </a>
         </div>
     </div>
 </body>
