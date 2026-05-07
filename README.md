@@ -246,15 +246,36 @@ source terraform/aws-login-env.sh
    - ArgoCD detects change and syncs automatically
    - New pods deployed with new image
 
-### **Phase 7: Logging Stack (30 min)** 🔄 NEXT
-1. Install Loki via Helm:
+### **Phase 7: Logging Stack + Grafana (30 min)** 🔄 NEXT
+1. **Install Loki via Helm**:
    ```bash
-   helm repo add grafana https://grafana.github.io/helm-charts
-   helm install loki grafana/loki-stack -n monitoring --create-namespace
+   helm install loki grafana/loki-stack \
+     --namespace monitoring \
+     --create-namespace \
+     --set grafana.enabled=true \
+     --set prometheus.enabled=false \
+     --set promtail.enabled=true
    ```
-2. Deploy Promtail as DaemonSet (collects logs from all pods)
-3. Verify log collection
-4. Configure log retention
+
+2. **Verify Installation**:
+   ```bash
+   kubectl get pods -n monitoring
+   # Should see: loki-0, loki-promtail-xxx, loki-grafana-xxx
+   ```
+
+3. **Access Grafana**:
+   ```bash
+   # Get Grafana admin password
+   kubectl get secret -n monitoring loki-stack-grafana -o jsonpath="{.data.admin-password}" | base64 -d
+   echo
+   
+   # Port-forward Grafana
+   kubectl port-forward -n monitoring svc/loki-stack-grafana 3000:80
+   ```
+   
+   Open http://localhost:3000
+   - Username: `admin`
+   - Password: (from command above)
 
 ### **Phase 8: Metrics Stack (30 min)**
 1. Install Prometheus via Helm:
@@ -298,10 +319,10 @@ source terraform/aws-login-env.sh
 | Phase 1: Infrastructure | ✅ | 2026-04-21 |
 | Phase 2: Container Registry | ✅ | 2026-04-21 |
 | Phase 3: Helm Chart | ✅ | 2026-04-21 |
-| Phase 4: Manual CI/CD | ✅ | In Progress |
-| Phase 5: GitHub Actions CI | ✅ | Planned |
-| Phase 6: ArgoCD GitOps | 🔄 | Planned |
-| Phase 7: Logging (Loki) | ⏳ | Planned |
+| Phase 4: Manual CI/CD | ✅ | 2026-04-22 |
+| Phase 5: GitHub Actions CI | ✅ | 2026-04-22 |
+| Phase 6: ArgoCD GitOps | ✅ | 2026-05-07 |
+| Phase 7: Logging (Loki + Grafana) | 🔄 | In Progress |
 | Phase 8: Metrics (Prometheus) | ⏳ | Planned |
 | Phase 9: Grafana Dashboards | ⏳ | Planned |
 | Phase 10: E2E Testing | ⏳ | Planned |
