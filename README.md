@@ -222,7 +222,7 @@ source terraform/aws-login-env.sh
    helm upgrade simple-app ./helm/simple-app
    ```
 
-### **Phase 6: GitOps with ArgoCD (45 min)** 🔄 NEXT
+### **Phase 6: GitOps with ArgoCD (45 min)** ✅ COMPLETED
 **Purpose**: Automate Helm deployments when values.yaml changes
 
 1. **Install ArgoCD**:
@@ -246,7 +246,7 @@ source terraform/aws-login-env.sh
    - ArgoCD detects change and syncs automatically
    - New pods deployed with new image
 
-### **Phase 7: Logging Stack (30 min)**
+### **Phase 7: Logging Stack (30 min)** 🔄 NEXT
 1. Install Loki via Helm:
    ```bash
    helm repo add grafana https://grafana.github.io/helm-charts
