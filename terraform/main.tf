@@ -38,8 +38,8 @@ module "eks" {
   eks_managed_node_groups = {
     default = {
       min_size     = 1
-      max_size     = 4
-      desired_size = 4
+      max_size     = 7
+      desired_size = 7
 
       instance_types = ["t3.micro"]
       ami_type       = "AL2_x86_64"
